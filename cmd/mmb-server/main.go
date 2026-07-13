@@ -238,10 +238,16 @@ func main() {
 		log.Warn().Msg("Static web assets not found (bin/web-client or web-client/dist). Panel will be unavailable.")
 	}
 
-	log.Info().Msgf("Server listening on :%d", cfg.ServerPort)
-	if err := e.Start(":" + intToString(cfg.ServerPort)); err != nil {
-		log.Fatal().Err(err).Msg("server error")
-	}
+	port := os.Getenv("PORT")
+if port == "" {
+	port = intToString(cfg.ServerPort)
+}
+
+log.Info().Msgf("Server listening on :%s", port)
+
+if err := e.Start(":" + port); err != nil {
+	log.Fatal().Err(err).Msg("server error")
+}
 }
 
 func osReadFileSafe(p string) ([]byte, error) {
